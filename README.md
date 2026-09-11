@@ -1,6 +1,6 @@
 # Lunar Lander
 
-[![CI](https://github.com/OpenPhysics/LunarLander/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenPhysics/LunarLander/actions/workflows/ci.yml)
+[![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
 A [SceneryStack](https://scenerystack.org/) port of the classic PhET **Lunar Lander** simulation. Pilot a
 lunar module to a soft landing by managing thrust and tilt while fuel runs down and terrain hazards loom.
@@ -101,9 +101,9 @@ scripts/
 
 ## License
 
-GNU Affero General Public License v3.0 — see [OpenPhysics org license](https://github.com/OpenPhysics/.github/blob/main/LICENSE). The original PhET simulation is Copyright © University of Colorado; this is an independent reimplementation.
+GNU Affero General Public License v3.0 — see [OpenLyceum org license](https://github.com/OpenLyceum/.github/blob/main/LICENSE). The original PhET simulation is Copyright © University of Colorado; this is an independent reimplementation.
 
 ## Contributing
 
-See [OpenPhysics contributing guidelines](https://github.com/OpenPhysics/.github/blob/main/CONTRIBUTING.md).
+See [OpenLyceum contributing guidelines](https://github.com/OpenLyceum/.github/blob/main/CONTRIBUTING.md).
 Report bugs via GitHub Issues; use org issue templates.

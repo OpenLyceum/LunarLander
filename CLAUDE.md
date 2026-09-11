@@ -1,6 +1,6 @@
 # CLAUDE.md — Lunar Lander
 
-Sim-specific context for AI assistants. General SceneryStack guidance: [OpenPhysics/.github/CLAUDE.md](https://github.com/OpenPhysics/.github/blob/main/CLAUDE.md).
+Sim-specific context for AI assistants. General SceneryStack guidance: [OpenLyceum/.github/CLAUDE.md](https://github.com/OpenLyceum/.github/blob/main/CLAUDE.md).
 
 ## Project
 
@@ -41,7 +41,7 @@ Physics for educators: `doc/model.md`. Architecture: `doc/implementation-notes.m
 
 ## Accessibility
 
-Follows the shared [OpenPhysics accessibility convention](https://github.com/OpenPhysics/Baton/blob/main/ACCESSIBILITY.md).
+Follows the shared [OpenLyceum accessibility convention](https://github.com/OpenLyceum/Baton/blob/main/ACCESSIBILITY.md).
 `LunarLanderScreenView` registers `LunarLanderScreenSummaryContent` (structured regions + live
 current-details) via the `screenSummaryContent` super-option, orders the PDOM through
 `pdomControlAreaNode`, and exposes a11y strings via `StringManager.getA11yStrings()`. This sim's
