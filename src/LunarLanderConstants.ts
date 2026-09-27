@@ -8,6 +8,7 @@
  * position (x, yAbs) in model metres with the original equations; the
  * "altitude" readout is yAbs minus the terrain surface elevation at x.
  */
+import LunarLanderNamespace from "./LunarLanderNamespace.js";
 
 const MAX_THRUST = 45000; // N — maximum descent-engine thrust
 
@@ -87,6 +88,8 @@ const LunarLanderConstants = {
   EXPLOSION_DURATION: 1.1, // s — explosion animation length
   RCS_PUFF_DURATION: 0.18, // s — side-thruster puff visibility
 } as const;
+
+LunarLanderNamespace.register("LunarLanderConstants", LunarLanderConstants);
 
 export default LunarLanderConstants;
 
