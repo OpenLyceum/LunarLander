@@ -42,15 +42,11 @@ init({
   // Allow the user to switch locale at runtime via the Preferences dialog.
   allowLocaleSwitching: true,
 
+  // Builds the Parallel DOM so Interactive Description content is exposed to assistive tech.
+  supportsInteractiveDescription: true,
+
   // Unmutes tambo at startup. Pair with audioOptions.supportsSound in src/main.ts.
   supportsSound: true,
-
-  // Build the Parallel DOM so the Interactive Description features (screen summary,
-  // accessible alerts, keyboard-navigation order) are actually reachable by screen
-  // readers. Without this flag SimDisplay leaves accessibility off, so all of that
-  // PDOM content — though present in the view code — is never rendered. This also
-  // enables Interactive Highlights by default (toggled on in main.ts preferences).
-  supportsInteractiveDescription: true,
 
   // Enables the "Projector Mode" color profile alongside the default dark theme.
   // Required when supportsProjectorMode: true is used in PreferencesModel (src/main.ts).
