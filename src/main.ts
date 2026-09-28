@@ -63,7 +63,7 @@ onReadyToLaunch(() => {
         supportsDynamicLocale: true,
       },
       audioOptions: {
-        // Enables the sound system (the lander synthesizes its own sounds via tambo)
+        // Initializes tambo and the Audio preferences. Pair with supportsSound in src/init.ts.
         supportsSound: true,
       },
     }),
