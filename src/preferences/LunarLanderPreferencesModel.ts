@@ -1,9 +1,9 @@
 /**
  * LunarLanderPreferencesModel.ts
  *
- * Sim-specific preferences (Preferences → Simulation) for Lunar Lander. Each
- * preference Property takes its initial value from the corresponding query
- * parameter in lunarLanderQueryParameters.
+ * Model for the simulation-specific preferences shown in Preferences →
+ * Simulation. Each preference Property takes its initial value from the
+ * corresponding query parameter in lunarLanderQueryParameters.
  */
 
 import { BooleanProperty } from "scenerystack/axon";
