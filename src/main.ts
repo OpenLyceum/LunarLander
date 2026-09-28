@@ -68,7 +68,7 @@ onReadyToLaunch(() => {
       },
     }),
 
-    // Credits shown in Help → About.
+    // Optional: fill in credits shown in Help → About
     credits: {
       leadDesign: "Mike Dubson (original Flash)",
       softwareDevelopment: "SceneryStack port",
