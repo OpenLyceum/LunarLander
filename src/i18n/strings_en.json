@@ -49,10 +49,15 @@
     "flightControlsHeading": "Flight Controls",
     "gameControlsHeading": "Game Controls",
     "thrust": "Increase / decrease thrust",
+    "thrustDescription": "Increase thrust with the up arrow, or decrease thrust with the down arrow.",
     "tilt": "Tilt left / right",
+    "tiltDescription": "Tilt the lander left or right.",
     "fullThrust": "Toggle full thrust",
+    "fullThrustDescription": "Toggle the engine between full thrust and off.",
     "reset": "Reset / new game",
-    "pausePlay": "Pause or play"
+    "resetDescription": "Reset the game.",
+    "pausePlay": "Pause or play",
+    "pausePlayDescription": "Pause or resume the flight."
   },
   "a11y": {
     "screenSummary": {

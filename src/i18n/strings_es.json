@@ -49,10 +49,15 @@
     "flightControlsHeading": "Controles de vuelo",
     "gameControlsHeading": "Controles del juego",
     "thrust": "Aumentar / disminuir el empuje",
+    "thrustDescription": "Aumenta el empuje con la flecha arriba, o disminúyelo con la flecha abajo.",
     "tilt": "Inclinar a la izquierda / derecha",
+    "tiltDescription": "Inclina el módulo a la izquierda o a la derecha.",
     "fullThrust": "Activar/desactivar empuje máximo",
+    "fullThrustDescription": "Alterna el motor entre empuje máximo y apagado.",
     "reset": "Reiniciar / nuevo juego",
-    "pausePlay": "Pausar o reproducir"
+    "resetDescription": "Reinicia la partida.",
+    "pausePlay": "Pausar o reproducir",
+    "pausePlayDescription": "Pausa o reanuda el vuelo."
   },
   "a11y": {
     "screenSummary": {

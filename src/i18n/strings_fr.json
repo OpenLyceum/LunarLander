@@ -49,10 +49,15 @@
     "flightControlsHeading": "Commandes de vol",
     "gameControlsHeading": "Commandes de jeu",
     "thrust": "Augmenter / diminuer la poussée",
+    "thrustDescription": "Augmentez la poussée avec la flèche haut, ou diminuez-la avec la flèche bas.",
     "tilt": "Incliner à gauche / droite",
+    "tiltDescription": "Inclinez l'alunisseur à gauche ou à droite.",
     "fullThrust": "Activer la poussée maximale",
+    "fullThrustDescription": "Basculez le moteur entre la poussée maximale et l'arrêt.",
     "reset": "Réinitialiser / nouvelle partie",
-    "pausePlay": "Mettre en pause ou reprendre"
+    "resetDescription": "Réinitialisez la partie.",
+    "pausePlay": "Mettre en pause ou reprendre",
+    "pausePlayDescription": "Mettez le vol en pause ou reprenez-le."
   },
   "a11y": {
     "screenSummary": {

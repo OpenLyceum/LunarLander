@@ -10,7 +10,7 @@ import { Bounds2, Matrix3, toFixed, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import { ModelViewTransform2, StringUtils } from "scenerystack/phetcommon";
-import { HBox, KeyboardListener, Node } from "scenerystack/scenery";
+import { HBox, HotkeyData, KeyboardListener, Node } from "scenerystack/scenery";
 import { PlayPauseButton, ResetAllButton } from "scenerystack/scenery-phet";
 import { ScreenView, type ScreenViewOptions } from "scenerystack/sim";
 import type { Tandem } from "scenerystack/tandem";
@@ -22,6 +22,7 @@ import type { LunarLanderModel } from "../model/LunarLanderModel.js";
 import { ControlPanel } from "./ControlPanel.js";
 import { ExplosionNode } from "./ExplosionNode.js";
 import { LanderNode } from "./LanderNode.js";
+import { LunarLanderKey, lunarLanderHotkeyData } from "./LunarLanderHotkeyData.js";
 import { LunarLanderScreenSummaryContent } from "./LunarLanderScreenSummaryContent.js";
 import { LunarLanderSoundView } from "./LunarLanderSoundView.js";
 import { MessageNode } from "./MessageNode.js";
@@ -253,30 +254,30 @@ export class LunarLanderScreenView extends ScreenView {
 
   private addKeyboardControls(model: LunarLanderModel): void {
     KeyboardListener.createGlobal(this, {
-      keys: ["arrowUp", "arrowDown", "arrowLeft", "arrowRight", "space", "r", "p"],
+      keyStringProperties: HotkeyData.combineKeyStringProperties(lunarLanderHotkeyData),
       fire: (_event, keysPressed) => {
         switch (keysPressed) {
-          case "arrowUp":
+          case LunarLanderKey.increaseThrust:
             model.increaseThrust();
             break;
-          case "arrowDown":
+          case LunarLanderKey.decreaseThrust:
             model.decreaseThrust();
             break;
-          case "arrowLeft":
+          case LunarLanderKey.tiltLeft:
             model.tiltLeft();
             break;
-          case "arrowRight":
+          case LunarLanderKey.tiltRight:
             model.tiltRight();
             break;
-          case "space":
+          case LunarLanderKey.fullThrust:
             model.toggleFullThrust();
             break;
-          case "r":
+          case LunarLanderKey.reset:
             this.interruptSubtreeInput();
             model.reset();
             this.reset();
             break;
-          case "p":
+          case LunarLanderKey.pausePlay:
             if (model.hasStartedProperty.value) {
               model.timer.isPlayingProperty.toggle();
             }
