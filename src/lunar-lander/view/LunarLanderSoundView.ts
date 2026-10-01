@@ -15,7 +15,7 @@ import { NoiseGenerator, OscillatorSoundGenerator, soundManager } from "scenerys
 import LunarLanderConstants from "../../LunarLanderConstants.js";
 import type { LunarLanderModel } from "../model/LunarLanderModel.js";
 
-const { MAX_THRUST, LOW_FUEL_FRACTION, INITIAL_FUEL } = LunarLanderConstants;
+const { MAX_THRUST } = LunarLanderConstants;
 
 const RCS_BEEP_DURATION = 0.12; // s
 const ALARM_BEEP_DURATION = 0.3; // s
@@ -66,22 +66,14 @@ export class LunarLanderSoundView {
       this.explosionTimer = EXPLOSION_DURATION;
     });
 
-    // Low-fuel and empty-tank alarm beeps (fire on the transition, like the original).
-    // A crash/boulder zeroes the tank instantly; the same guards as the accessible
-    // alerts in LunarLanderScreenView keep that from sounding the fuel alarm: a
-    // genuine low-fuel crossing leaves fuel in the tank, and a genuine empty tank
-    // is reached from an already-low one.
-    const lowFuelThreshold = LOW_FUEL_FRACTION * INITIAL_FUEL;
+    // A low-fuel crossing leaves fuel in the tank; empty-tank events come from
+    // engine consumption in the model, so crash damage never triggers an alarm.
     model.lowFuelProperty.lazyLink((low) => {
       if (low && model.lander.remainingFuelProperty.value > 0) {
         this.beepAlarm();
       }
     });
-    model.lander.remainingFuelProperty.lazyLink((fuel, oldFuel) => {
-      if (fuel <= 0 && oldFuel > 0 && oldFuel <= lowFuelThreshold) {
-        this.beepAlarm();
-      }
-    });
+    model.outOfFuelEmitter.addListener(() => this.beepAlarm());
   }
 
   private beepAlarm(): void {

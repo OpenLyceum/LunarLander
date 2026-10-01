@@ -60,8 +60,8 @@ const LunarLanderConstants = {
   // leave the (clipped) play area, so the view zooms back out to keep it on-screen,
   // pinning it to a band ZOOM_OUT_TOP_FRACTION below the top edge.
   ZOOM_OUT_TOP_FRACTION: 0.12, // fraction of play-area height the lander rides below the top while climbing
-  // Floor on the zoom-out factor. The view shows up to ~MODEL_MAX_ALTITUDE / this
-  // vertically, so 0.16 keeps the lander on-screen climbing to roughly 1 km.
+  // Floor on the zoom-out factor to keep the craft readable. Beyond the altitude
+  // covered by this scale, the camera pans vertically to follow the lander.
   ZOOM_OUT_MIN: 0.16, // ×
   // Horizontal follow uses a central dead-zone: the lander roams this central
   // fraction of the play-area width freely before the view starts panning.

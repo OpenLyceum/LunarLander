@@ -72,6 +72,8 @@ export class LunarLanderModel implements TModel {
   // One-shot view/sound triggers.
   public readonly tiltEmitter = new Emitter<[number]>({ parameters: [{ valueType: "number" }] });
   public readonly explosionEmitter = new Emitter();
+  // Emitted only when the engine consumes the last fuel, never for crash damage.
+  public readonly outOfFuelEmitter = new Emitter();
 
   private timeAccumulator = 0;
 
@@ -239,8 +241,10 @@ export class LunarLanderModel implements TModel {
         this.landingSpeedProperty.value = landingSpeed;
 
         // The original literally tested `angle < 0.2` (signed); the corrected,
-        // symmetric test treats either tilt direction equally.
-        const level = Math.abs(angle) < LEVEL_ANGLE_TOLERANCE;
+        // symmetric test treats either tilt direction equally. Compare the
+        // orientation modulo a full turn, since tilt controls accumulate angle.
+        const orientation = Math.atan2(Math.sin(angle), Math.cos(angle));
+        const level = Math.abs(orientation) < LEVEL_ANGLE_TOLERANCE;
         let newState: CrashState;
         if (landingSpeed < SOFT_SPEED && level) {
           newState = CrashState.SOFT_LANDED;
@@ -274,6 +278,11 @@ export class LunarLanderModel implements TModel {
     lander.positionProperty.value = new Vector2(x, y);
     lander.velocityProperty.value = new Vector2(vX, vY);
     lander.accelerationProperty.value = new Vector2(aX, aY);
+    // Wait until collisions are resolved so a crash on this slice only reports
+    // the crash, even when the engine also used the last fuel before impact.
+    if (fuelBefore > 0 && fuel <= 0 && this.crashStateProperty.value !== CrashState.CRASH_LANDED) {
+      this.outOfFuelEmitter.emit();
+    }
   }
 
   public reset(): void {

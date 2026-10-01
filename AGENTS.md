@@ -80,6 +80,7 @@ Fleet-standard Vitest layout:
 Actual specs:
 
 - `tests/lunar-lander/model/LunarLanderModel.test.ts`
+- `tests/browser/flight-controls.spec.ts` — camera tracking, held flight keys, and live fuel warnings
 - `tests/memory-leak.test.ts`
 
 Run `npm test`. CI runs the suite when a `test` script is present.
@@ -95,5 +96,6 @@ npm test
 
 ## Development notes
 
-- Camera zoom follows altitude (zoom out near ground). Throttle and tilt respond to keyboard and on-screen controls; game pauses until Start is pressed.
+- Camera zoom follows altitude (zoom in near ground), then pans vertically above the minimum zoom's altitude range. Throttle and tilt respond to keyboard and on-screen controls; game pauses until Start is pressed.
+- Held arrow keys repeat thrust/tilt; Space toggles once per press. Empty-tank warnings use `outOfFuelEmitter`, fired after collision resolution only for engine consumption.
 - Keyboard: global ↑↓←→ and Space only (`LunarLanderHotkeyData.ts`). Space is skipped when a `<button>` has focus so it doesn't double-fire with button activation. Pause/reset use the stock Alt+K / Alt+R hotkeys from `PlayPauseButton` / `ResetAllButton` — don't add single-character game shortcuts (WCAG 2.1.4).

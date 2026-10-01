@@ -35,7 +35,8 @@ src/
 ```
 
 Data flows Model → View through AXON `Property` objects and one-shot `Emitter`s (`tiltEmitter`,
-`explosionEmitter`).
+`explosionEmitter`, `outOfFuelEmitter`). Empty-tank events fire only for engine consumption,
+after collision resolution, so crashes never announce fuel depletion.
 
 ## Key design decisions
 
@@ -48,19 +49,20 @@ Data flows Model → View through AXON `Property` objects and one-shot `Emitter`
   `startGame()` sets `hasStartedProperty` and `isPlayingProperty`.
 - **CrashState terminal.** `CRASH_LANDED` stops physics until Reset All. Boulder hit zeros fuel,
   fires `explosionEmitter`.
-- **Level attitude test.** `|angle| < LEVEL_ANGLE_TOLERANCE` (0.2 rad) required for soft/hard
-  (symmetric improvement over Flash's signed-only test).
+- **Level attitude test.** The angle is reduced modulo a full turn before comparing its magnitude
+  with `LEVEL_ANGLE_TOLERANCE` (0.2 rad), treating full rotations and either tilt direction equally.
 - **Terrain.** `TerrainData.ts` generates pads, slopes, boulders from a fixed PRNG seed (same
   surface every game); `ScoreKeeper` uses zone index and
   `SPOT_SCORES` palette (width ↔ points inverse relationship in data).
 - **Camera.** View zooms from `ZOOM_START_ALTITUDE` toward `ZOOM_MAX` at touchdown; pans with
-  dead zone — see `LunarLanderConstants.ts`.
+  a horizontal dead zone and follows high ascents vertically once minimum zoom is reached — see
+  `LunarLanderConstants.ts`.
 - **Nested constants.** `src/LunarLanderConstants.ts`.
 
 ## View components
 
 - **LunarLanderScreenView** — inverted-Y `ModelViewTransform2`, dynamic camera on `worldNode`,
-  keyboard (↑↓ thrust, ←→ tilt, Space full thrust; Space is ignored when a button has focus so
+  keyboard (held ↑↓ thrust and ←→ tilt repeat, Space full thrust toggles once; Space is ignored when a button has focus so
   it doesn't double-fire). Pause/play and reset are the stock Alt+K / Alt+R hotkeys of the
   Play/Pause and Reset All buttons — no single-character game shortcuts (WCAG 2.1.4).
 - **LanderNode**, **TerrainNode**, **StarfieldNode** — scene inside zoomable world.
@@ -83,7 +85,10 @@ manager for sim lifetime. No dynamic entity add/remove.
 `npm test` (vitest):
 
 - `tests/lunar-lander/model/LunarLanderModel.test.ts` — gravity fall with zero thrust,
-  reset restores `IN_FLIGHT`, start gate
+  reset restores `IN_FLIGHT`, full-rotation landings, and engine depletion versus crash fuel loss
+- `tests/browser/flight-controls.spec.ts` — ascent/descent camera tracking and reset, keyboard
+  repetition, Space/button activation, and audio/accessibility fuel warnings. Run with
+  `npx playwright test tests/browser --project=chromium`.
 - `tests/memory-leak.test.ts` — WeakRef/GC regression suite
 
 CI gate: `npm run lint && npm run check && npm run build`.

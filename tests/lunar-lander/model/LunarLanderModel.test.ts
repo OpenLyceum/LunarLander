@@ -1,3 +1,4 @@
+import { Vector2 } from "scenerystack/dot";
 import { afterEach, describe, expect, it } from "vitest";
 import LunarLanderConstants from "../../../src/LunarLanderConstants.js";
 import { CrashState } from "../../../src/lunar-lander/model/CrashState.js";
@@ -56,5 +57,107 @@ describe("LunarLanderModel", () => {
     freeFall.reset();
     thrusting.reset();
     model = freeFall;
+  });
+
+  it.each([-2, -1, 1, 2])("lands softly after %i full rotations", (turns) => {
+    model = new LunarLanderModel(new LunarLanderPreferencesModel());
+    model.startGame();
+    for (let i = 0; i < Math.abs(turns) * 120; i++) {
+      if (turns < 0) {
+        model.tiltLeft();
+      } else {
+        model.tiltRight();
+      }
+    }
+    const x = model.terrain.startX;
+    model.lander.positionProperty.value = new Vector2(x, model.terrain.surfaceY(x) + 0.01);
+    model.lander.velocityProperty.value = new Vector2(0, -1);
+
+    model.step(FIXED_DT);
+
+    expect(model.crashStateProperty.value).toBe(CrashState.SOFT_LANDED);
+    expect(model.scoreKeeper.scoreProperty.value).toBeGreaterThan(0);
+  });
+
+  it.each([-0.25, 0.25])("still crashes when tilted by %f radians after a full turn", (tilt) => {
+    model = new LunarLanderModel(new LunarLanderPreferencesModel());
+    model.startGame();
+    model.lander.angleProperty.value = 2 * Math.PI + tilt;
+    const x = model.terrain.startX;
+    model.lander.positionProperty.value = new Vector2(x, model.terrain.surfaceY(x) + 0.01);
+    model.lander.velocityProperty.value = new Vector2(0, -1);
+
+    model.step(FIXED_DT);
+
+    expect(model.crashStateProperty.value).toBe(CrashState.CRASH_LANDED);
+  });
+
+  it("reports engine fuel depletion once and can report it again after reset", () => {
+    model = new LunarLanderModel(new LunarLanderPreferencesModel());
+    let warnings = 0;
+    model.outOfFuelEmitter.addListener(() => {
+      warnings++;
+    });
+
+    for (let burn = 0; burn < 2; burn++) {
+      model.startGame();
+      model.lander.remainingFuelProperty.value = 0.1;
+      model.toggleFullThrust();
+      model.step(FIXED_DT);
+      expect(model.lander.remainingFuelProperty.value).toBe(0);
+      expect(model.lander.thrustProperty.value).toBe(0);
+      expect(warnings).toBe(burn + 1);
+      model.step(FIXED_DT);
+      expect(warnings).toBe(burn + 1);
+      model.reset();
+      expect(warnings).toBe(burn + 1);
+    }
+  });
+
+  it.each(["terrain", "boulder"])("does not report fuel depletion for a low-fuel %s crash", (obstacle) => {
+    model = new LunarLanderModel(new LunarLanderPreferencesModel());
+    model.startGame();
+    model.lander.remainingFuelProperty.value = 50;
+    let warnings = 0;
+    model.outOfFuelEmitter.addListener(() => {
+      warnings++;
+    });
+    if (obstacle === "boulder") {
+      const boulder = model.terrain.boulders[0];
+      expect(boulder).toBeDefined();
+      if (!boulder) {
+        throw new Error("The terrain must contain a boulder");
+      }
+      model.lander.positionProperty.value = new Vector2(boulder.x, boulder.surface + boulder.radius);
+    } else {
+      const x = model.terrain.startX;
+      model.lander.positionProperty.value = new Vector2(x, model.terrain.surfaceY(x) + 0.01);
+    }
+    model.lander.velocityProperty.value = new Vector2(0, -10);
+
+    model.step(FIXED_DT);
+
+    expect(model.crashStateProperty.value).toBe(CrashState.CRASH_LANDED);
+    expect(model.lander.remainingFuelProperty.value).toBe(0);
+    expect(warnings).toBe(0);
+  });
+
+  it("only reports a crash when the engine empties the tank on the impact slice", () => {
+    model = new LunarLanderModel(new LunarLanderPreferencesModel());
+    model.startGame();
+    model.lander.remainingFuelProperty.value = 0.1;
+    model.toggleFullThrust();
+    const x = model.terrain.startX;
+    model.lander.positionProperty.value = new Vector2(x, model.terrain.surfaceY(x) + 0.01);
+    model.lander.velocityProperty.value = new Vector2(0, -10);
+    let warnings = 0;
+    model.outOfFuelEmitter.addListener(() => {
+      warnings++;
+    });
+
+    model.step(FIXED_DT);
+
+    expect(model.crashStateProperty.value).toBe(CrashState.CRASH_LANDED);
+    expect(warnings).toBe(0);
   });
 });

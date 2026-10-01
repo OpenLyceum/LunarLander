@@ -22,7 +22,7 @@ import type { LunarLanderModel } from "../model/LunarLanderModel.js";
 import { ControlPanel } from "./ControlPanel.js";
 import { ExplosionNode } from "./ExplosionNode.js";
 import { LanderNode } from "./LanderNode.js";
-import { LunarLanderKey, lunarLanderHotkeyData } from "./LunarLanderHotkeyData.js";
+import { fullThrustHotkeyData, LunarLanderKey, thrustHotkeyData, tiltHotkeyData } from "./LunarLanderHotkeyData.js";
 import { LunarLanderScreenSummaryContent } from "./LunarLanderScreenSummaryContent.js";
 import { LunarLanderSoundView } from "./LunarLanderSoundView.js";
 import { MessageNode } from "./MessageNode.js";
@@ -45,8 +45,6 @@ const {
   ZOOM_OUT_TOP_FRACTION,
   ZOOM_OUT_MIN,
   CAMERA_DEAD_ZONE_FRACTION,
-  LOW_FUEL_FRACTION,
-  INITIAL_FUEL,
 } = LunarLanderConstants;
 
 export class LunarLanderScreenView extends ScreenView {
@@ -234,28 +232,22 @@ export class LunarLanderScreenView extends ScreenView {
       );
     });
 
-    // Fuel warnings. A crash/boulder zeroes the tank instantly (just before
-    // crashState flips), so the guards below keep those from masquerading as a
-    // low-fuel/out-of-fuel warning: a genuine low-fuel crossing still leaves
-    // fuel in the tank, and a genuine empty-tank is reached from an already-low
-    // tank rather than jumping straight from a healthy one.
-    const lowFuelThreshold = LOW_FUEL_FRACTION * INITIAL_FUEL;
+    // Only engine consumption emits out-of-fuel; crash damage stays silent.
     model.lowFuelProperty.lazyLink((low) => {
       if (low && model.lander.remainingFuelProperty.value > 0) {
         this.addAccessibleResponse(alerts.lowFuelStringProperty.value);
       }
     });
-    model.lander.remainingFuelProperty.lazyLink((fuel, previousFuel) => {
-      if (fuel <= 0 && previousFuel > 0 && previousFuel <= lowFuelThreshold) {
-        this.addAccessibleResponse(alerts.outOfFuelStringProperty.value);
-      }
+    model.outOfFuelEmitter.addListener(() => {
+      this.addAccessibleResponse(alerts.outOfFuelStringProperty.value);
     });
   }
 
   private addKeyboardControls(model: LunarLanderModel): void {
     KeyboardListener.createGlobal(this, {
-      keyStringProperties: HotkeyData.combineKeyStringProperties(lunarLanderHotkeyData),
-      fire: (event, keysPressed) => {
+      keyStringProperties: HotkeyData.combineKeyStringProperties([thrustHotkeyData, tiltHotkeyData]),
+      fireOnHold: true,
+      fire: (_event, keysPressed) => {
         switch (keysPressed) {
           case LunarLanderKey.increaseThrust:
             model.increaseThrust();
@@ -269,16 +261,18 @@ export class LunarLanderScreenView extends ScreenView {
           case LunarLanderKey.tiltRight:
             model.tiltRight();
             break;
-          case LunarLanderKey.fullThrust:
-            // A focused button already activates on Space; toggling thrust as well
-            // would start the game at full thrust (Start) or cancel itself out
-            // (the Full Thrust button toggles it back on key-up).
-            if (!(event?.target instanceof HTMLButtonElement)) {
-              model.toggleFullThrust();
-            }
-            break;
           default:
             break;
+        }
+      },
+    });
+    KeyboardListener.createGlobal(this, {
+      keyStringProperties: HotkeyData.combineKeyStringProperties([fullThrustHotkeyData]),
+      // Space remains a single toggle even when held. A focused button already
+      // activates on Space, so let its own listener handle that activation.
+      fire: (event) => {
+        if (!(event?.target instanceof HTMLButtonElement)) {
+          model.toggleFullThrust();
         }
       },
     });
@@ -299,8 +293,8 @@ export class LunarLanderScreenView extends ScreenView {
    * wider-than-one-screen moon always fills the play area — the view never slides
    * past its edges.
    *
-   * The vertical part is a pure scale by z about the focal point f (the surface
-   * point under the lander, in base-view pixels): screen.y = f.y + z·(v.y − f.y).
+   * The vertical part scales by z about the focal point f (the surface point
+   * under the lander, in base-view pixels), then pans when minimum zoom is reached.
    * z > 1 zooms in (descent), z = 1 is the base view, z < 1 zooms out (ascent).
    * Horizontally the same scale z applies (so zooming out reveals more terrain
    * sideways too); the x-translation c centres the lander's column on-screen.
@@ -360,9 +354,11 @@ export class LunarLanderScreenView extends ScreenView {
     // is always measured from the true on-screen centre even against the edges.
     this.cameraFocusX = this.modelViewTransform.viewToModelX((centerX - c) / z);
 
-    // Scale about f vertically, translate by c horizontally:
-    // [ z 0 c ; 0 z f.y(1−z) ; 0 0 1 ].
-    this.worldNode.matrix = Matrix3.rowMajor(z, 0, c, 0, z, f.y * (1 - z), 0, 0, 1);
+    // Above the zoom-out limit, pan vertically to keep the lander in the top
+    // band instead of letting it leave the clipped play area. Below that limit,
+    // preserve the surface-anchored camera used for descent and touchdown.
+    const verticalTranslation = Math.max(f.y * (1 - z), targetY - z * v.y);
+    this.worldNode.matrix = Matrix3.rowMajor(z, 0, c, 0, z, verticalTranslation, 0, 0, 1);
   }
 
   public reset(): void {
