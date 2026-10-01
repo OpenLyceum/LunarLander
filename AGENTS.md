@@ -34,10 +34,11 @@ Physics for educators: `doc/model.md`. Architecture: `doc/implementation-notes.m
 
 ### Stepping & numerics
 
-- Lunar gravity `g = 1.6 m/s²`; empty mass `6839 kg`; max thrust `45000 N`; Tsiolkovsky fuel burn (`ISP`).
+- Lunar gravity `g = 1.6 m/s²`; empty mass `6839 kg`; max thrust `45000 N`; fuel burn ṁ = F/`ISP` (effective exhaust velocity).
 - **Fixed `40 ms` integration timestep** with real-frame accumulator (`FIXED_DT`, `MAX_CATCHUP_STEPS`) — matches original Flash tuning.
 - Soft landing: < 2 m/s and roughly level; hard: < 6 m/s; crash above that. Boulder overlap sets `hitBoulderProperty`.
-- Terrain is hand-designed data in `TerrainData.ts` — flat pads (width inversely related to point value), slopes, boulders; not procedural.
+- Terrain is generated in `TerrainData.ts` from a fixed PRNG seed (identical every game) — 40 flat pads (width inversely related to point value), rolling-hill slopes, 35 boulders. Terrain ends are walls: `stepInternal` zeroes `v_x` when the position is clamped.
+- Thrust/tilt controls are no-ops until `startGame()`.
 
 ## Accessibility
 
@@ -95,3 +96,4 @@ npm test
 ## Development notes
 
 - Camera zoom follows altitude (zoom out near ground). Throttle and tilt respond to keyboard and on-screen controls; game pauses until Start is pressed.
+- Keyboard: global ↑↓←→ and Space only (`LunarLanderHotkeyData.ts`). Space is skipped when a `<button>` has focus so it doesn't double-fire with button activation. Pause/reset use the stock Alt+K / Alt+R hotkeys from `PlayPauseButton` / `ResetAllButton` — don't add single-character game shortcuts (WCAG 2.1.4).

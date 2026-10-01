@@ -19,7 +19,7 @@ src/
     model/
       LunarLanderModel.ts           TModel: step, controls, landing/collision
       Lander.ts                       position, velocity, angle, thrust, fuel, mass
-      Terrain.ts, TerrainData.ts      hand-designed surface, zones, boulders
+      Terrain.ts, TerrainData.ts      seeded deterministic surface, zones, boulders
       ScoreKeeper.ts                  per-zone scoring
       CrashState.ts                   IN_FLIGHT | SOFT | HARD | CRASH
       LunarLanderConstants.ts
@@ -39,7 +39,7 @@ Data flows Model → View through AXON `Property` objects and one-shot `Emitter`
 
 ## Key design decisions
 
-- **Flash-fidelity physics.** `stepInternal` uses the original position-Verlet update, `GRAVITY`
+- **Flash-fidelity physics.** `stepInternal` uses the original constant-acceleration (exact kinematic) update, `GRAVITY`
   = 1.6, `MASS_EMPTY` = 6839, `MAX_THRUST` = 45000, `ISP` = 3050, fuel burn Δm = F·Δt/ISP.
   Do not "modernize" integrator or constants without an explicit fidelity break.
 - **Absolute coordinates.** `Lander.positionProperty` is (x, y_abs) in model metres. Altitude
@@ -50,7 +50,8 @@ Data flows Model → View through AXON `Property` objects and one-shot `Emitter`
   fires `explosionEmitter`.
 - **Level attitude test.** `|angle| < LEVEL_ANGLE_TOLERANCE` (0.2 rad) required for soft/hard
   (symmetric improvement over Flash's signed-only test).
-- **Terrain.** `TerrainData.ts` encodes pads, slopes, boulders; `ScoreKeeper` uses zone index and
+- **Terrain.** `TerrainData.ts` generates pads, slopes, boulders from a fixed PRNG seed (same
+  surface every game); `ScoreKeeper` uses zone index and
   `SPOT_SCORES` palette (width ↔ points inverse relationship in data).
 - **Camera.** View zooms from `ZOOM_START_ALTITUDE` toward `ZOOM_MAX` at touchdown; pans with
   dead zone — see `LunarLanderConstants.ts`.
@@ -59,7 +60,9 @@ Data flows Model → View through AXON `Property` objects and one-shot `Emitter`
 ## View components
 
 - **LunarLanderScreenView** — inverted-Y `ModelViewTransform2`, dynamic camera on `worldNode`,
-  keyboard (↑↓ thrust, ←→ tilt, Space full thrust, P pause/help, R reset).
+  keyboard (↑↓ thrust, ←→ tilt, Space full thrust; Space is ignored when a button has focus so
+  it doesn't double-fire). Pause/play and reset are the stock Alt+K / Alt+R hotkeys of the
+  Play/Pause and Reset All buttons — no single-character game shortcuts (WCAG 2.1.4).
 - **LanderNode**, **TerrainNode**, **StarfieldNode** — scene inside zoomable world.
 - **Instrument cluster** — fuel gauge, attitude indicator, altitude/range/speed readouts, score.
 - **ThrottleControlNode** — on-screen touch buttons mirroring keyboard.

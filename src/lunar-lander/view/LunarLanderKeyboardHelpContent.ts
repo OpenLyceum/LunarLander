@@ -5,15 +5,15 @@
  * keyboard "?" button joist adds to the navigation bar). Rows are built from
  * the same HotkeyData that drives LunarLanderScreenView.addKeyboardControls.
  */
-import { KeyboardHelpSection, KeyboardHelpSectionRow, TwoColumnKeyboardHelpContent } from "scenerystack/scenery-phet";
-import { StringManager } from "../../i18n/StringManager.js";
 import {
-  fullThrustHotkeyData,
-  pausePlayHotkeyData,
-  resetHotkeyData,
-  thrustHotkeyData,
-  tiltHotkeyData,
-} from "./LunarLanderHotkeyData.js";
+  KeyboardHelpSection,
+  KeyboardHelpSectionRow,
+  PlayControlButton,
+  ResetAllButton,
+  TwoColumnKeyboardHelpContent,
+} from "scenerystack/scenery-phet";
+import { StringManager } from "../../i18n/StringManager.js";
+import { fullThrustHotkeyData, thrustHotkeyData, tiltHotkeyData } from "./LunarLanderHotkeyData.js";
 
 export class LunarLanderKeyboardHelpContent extends TwoColumnKeyboardHelpContent {
   public constructor() {
@@ -26,8 +26,8 @@ export class LunarLanderKeyboardHelpContent extends TwoColumnKeyboardHelpContent
     ]);
 
     const gameControls = new KeyboardHelpSection(strings.gameControlsHeadingStringProperty, [
-      KeyboardHelpSectionRow.fromHotkeyData(resetHotkeyData),
-      KeyboardHelpSectionRow.fromHotkeyData(pausePlayHotkeyData),
+      KeyboardHelpSectionRow.fromHotkeyData(PlayControlButton.TOGGLE_PLAY_HOTKEY_DATA),
+      KeyboardHelpSectionRow.fromHotkeyData(ResetAllButton.RESET_ALL_HOTKEY_DATA),
     ]);
 
     KeyboardHelpSection.alignHelpSectionIcons([flightControls, gameControls]);

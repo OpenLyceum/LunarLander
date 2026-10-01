@@ -1,7 +1,7 @@
 /**
  * Terrain.ts
  *
- * Pure geometry queries over the hand-designed terrain table. Replaces the
+ * Pure geometry queries over the generated terrain table. Replaces the
  * original Flash pixel `hitTest` with interval/circle math in model space, so
  * the model stays free of any view dependency.
  */
@@ -55,7 +55,7 @@ export class Terrain {
     return 0;
   }
 
-  /** The scored zone index (1..15) of the flat pad containing x, or 0 if none. */
+  /** The scored zone index (1..40) of the flat pad containing x, or 0 if none. */
   public zoneAt(x: number): number {
     for (const segment of this.data.segments) {
       if (segment.kind === "flat" && x >= segment.x0 && x <= segment.x1) {

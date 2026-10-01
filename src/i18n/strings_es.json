@@ -32,7 +32,7 @@
     "hardLandingsColon": "aterrizajes bruscos:"
   },
   "messages": {
-    "landingSpeedEq": "Velocidad de aterrizaje = ",
+    "landingSpeedPattern": "Velocidad de aterrizaje = {{speed}} m/s",
     "softLanding": "Aterrizaje suave.",
     "hardLanding": "Aterrizaje brusco.",
     "crash1": "Aterrizaje forzoso, patas dañadas.",
@@ -53,11 +53,7 @@
     "tilt": "Inclinar a la izquierda / derecha",
     "tiltDescription": "Inclina el módulo a la izquierda o a la derecha.",
     "fullThrust": "Activar/desactivar empuje máximo",
-    "fullThrustDescription": "Alterna el motor entre empuje máximo y apagado.",
-    "reset": "Reiniciar / nuevo juego",
-    "resetDescription": "Reinicia la partida.",
-    "pausePlay": "Pausar o reproducir",
-    "pausePlayDescription": "Pausa o reanuda el vuelo."
+    "fullThrustDescription": "Alterna el motor entre empuje máximo y apagado."
   },
   "a11y": {
     "screenSummary": {

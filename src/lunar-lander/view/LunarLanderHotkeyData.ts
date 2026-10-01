@@ -4,6 +4,10 @@
  * Global flight and game shortcuts. The screen view's KeyboardListener and the
  * keyboard-help dialog both read these objects, so the dialog icons stay tied
  * to the keys that actually fire.
+ *
+ * Game shortcuts carry a modifier (WCAG 2.1.4, character key shortcuts):
+ * pause/play is the Play/Pause button's own Alt+K hotkey and reset is the Reset
+ * All button's own Alt+R hotkey, so neither is declared here.
  */
 
 import { HotkeyData } from "scenerystack/scenery";
@@ -18,8 +22,6 @@ export const LunarLanderKey = {
   tiltLeft: "arrowLeft",
   tiltRight: "arrowRight",
   fullThrust: "space",
-  reset: "r",
-  pausePlay: "p",
 } as const;
 
 export const thrustHotkeyData = new HotkeyData({
@@ -46,27 +48,5 @@ export const fullThrustHotkeyData = new HotkeyData({
   keyboardHelpDialogPDOMLabelStringProperty: keyboardHelpStrings.fullThrustDescriptionStringProperty,
 });
 
-export const resetHotkeyData = new HotkeyData({
-  keys: [LunarLanderKey.reset],
-  repoName: "lunar-lander",
-  global: true,
-  keyboardHelpDialogLabelStringProperty: keyboardHelpStrings.resetStringProperty,
-  keyboardHelpDialogPDOMLabelStringProperty: keyboardHelpStrings.resetDescriptionStringProperty,
-});
-
-export const pausePlayHotkeyData = new HotkeyData({
-  keys: [LunarLanderKey.pausePlay],
-  repoName: "lunar-lander",
-  global: true,
-  keyboardHelpDialogLabelStringProperty: keyboardHelpStrings.pausePlayStringProperty,
-  keyboardHelpDialogPDOMLabelStringProperty: keyboardHelpStrings.pausePlayDescriptionStringProperty,
-});
-
-/** Every global hotkey, in dialog order. */
-export const lunarLanderHotkeyData = [
-  thrustHotkeyData,
-  tiltHotkeyData,
-  fullThrustHotkeyData,
-  resetHotkeyData,
-  pausePlayHotkeyData,
-];
+/** Every global flight hotkey handled by the screen view, in dialog order. */
+export const lunarLanderHotkeyData = [thrustHotkeyData, tiltHotkeyData, fullThrustHotkeyData];

@@ -32,7 +32,7 @@
     "hardLandingsColon": "alunissages éprouvants :"
   },
   "messages": {
-    "landingSpeedEq": "Vitesse d'alunissage = ",
+    "landingSpeedPattern": "Vitesse d'alunissage = {{speed}} m/s",
     "softLanding": "Alunissage en douceur.",
     "hardLanding": "Alunissage éprouvant.",
     "crash1": "Petit crash, pieds cassés.",
@@ -53,11 +53,7 @@
     "tilt": "Incliner à gauche / droite",
     "tiltDescription": "Inclinez l'alunisseur à gauche ou à droite.",
     "fullThrust": "Activer la poussée maximale",
-    "fullThrustDescription": "Basculez le moteur entre la poussée maximale et l'arrêt.",
-    "reset": "Réinitialiser / nouvelle partie",
-    "resetDescription": "Réinitialisez la partie.",
-    "pausePlay": "Mettre en pause ou reprendre",
-    "pausePlayDescription": "Mettez le vol en pause ou reprenez-le."
+    "fullThrustDescription": "Basculez le moteur entre la poussée maximale et l'arrêt."
   },
   "a11y": {
     "screenSummary": {

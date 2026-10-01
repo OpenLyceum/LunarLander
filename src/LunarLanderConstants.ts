@@ -27,7 +27,7 @@ const LunarLanderConstants = {
   MASS_EMPTY: 6839, // kg — descent + ascent stages including ascent fuel
   INITIAL_FUEL: 816.5, // kg — descent-stage fuel (8165 kg full / 10)
   MAX_THRUST, // N
-  ISP: 3050, // m/s — effective exhaust velocity (specific impulse), for the rocket equation
+  ISP: 3050, // m/s — effective exhaust velocity (specific impulse); fuel burns at F / ISP
 
   // ── Landing classification thresholds ──────────────────────────────────────
   SOFT_SPEED: 2.0, // m/s — below this (and roughly level) is a soft landing

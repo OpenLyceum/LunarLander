@@ -11,8 +11,8 @@ The simulation models piloting a **rocket-powered lunar module** to the Moon's s
 thrust and orientation, and attempt a gentle touchdown on narrow scoring pads while avoiding
 **boulders** and high-speed impacts.
 
-The activity connects Newton's second law, the **Tsiolkovsky rocket equation** (fuel burn reduces
-mass), and 2-D kinematics — vertical descent with lateral steering via tilted thrust.
+The activity connects Newton's second law, **rocket propulsion** (fuel burn reduces mass,
+the idea behind the Tsiolkovsky rocket equation), and 2-D kinematics — vertical descent with lateral steering via tilted thrust.
 
 Key ideas a student should take away:
 
@@ -48,15 +48,16 @@ a_y = (F/m) cos θ − g
 
 where m = m₀ + m_fuel. When fuel is exhausted, F = 0.
 
-The state is advanced each fixed step with a **position-Verlet-style** update matching the
-original Flash sim:
+The state is advanced each fixed step with the exact **constant-acceleration** kinematic
+update (acceleration held fixed over the step), matching the original Flash sim:
 
 ```
 x ← x + v_x Δt + ½ a_x Δt² ,   v_x ← v_x + a_x Δt
 y ← y + v_y Δt + ½ a_y Δt² ,   v_y ← v_y + a_y Δt
 ```
 
-**Fuel burn** (Tsiolkovsky):
+**Fuel burn** — mass flow rate ṁ = F / I_sp, with I_sp the effective exhaust velocity
+(integrating this over a burn gives the Tsiolkovsky rocket equation):
 
 ```
 Δm_fuel = − F · Δt / I_sp
@@ -81,7 +82,8 @@ more points). Each zone scores at most once per game.
 - **Uniform gravity** — no altitude-dependent g or orbital mechanics.
 - **No atmosphere** — no drag (appropriate for the Moon).
 - **Rigid lander as point mass** with orientation for thrust direction only.
-- **Hand-designed terrain** — slopes, pads, and boulders from fixed data, not procedural generation.
+- **Fixed terrain** — slopes, pads, and boulders generated from a fixed random seed, so every game
+  uses the same surface. The left and right ends of the terrain act as walls (horizontal motion stops).
 - **Fixed 40 ms timestep** with frame accumulation — reproduces original Flash tuning regardless
   of display frame rate.
 

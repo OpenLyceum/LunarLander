@@ -255,7 +255,7 @@ export class LunarLanderScreenView extends ScreenView {
   private addKeyboardControls(model: LunarLanderModel): void {
     KeyboardListener.createGlobal(this, {
       keyStringProperties: HotkeyData.combineKeyStringProperties(lunarLanderHotkeyData),
-      fire: (_event, keysPressed) => {
+      fire: (event, keysPressed) => {
         switch (keysPressed) {
           case LunarLanderKey.increaseThrust:
             model.increaseThrust();
@@ -270,16 +270,11 @@ export class LunarLanderScreenView extends ScreenView {
             model.tiltRight();
             break;
           case LunarLanderKey.fullThrust:
-            model.toggleFullThrust();
-            break;
-          case LunarLanderKey.reset:
-            this.interruptSubtreeInput();
-            model.reset();
-            this.reset();
-            break;
-          case LunarLanderKey.pausePlay:
-            if (model.hasStartedProperty.value) {
-              model.timer.isPlayingProperty.toggle();
+            // A focused button already activates on Space; toggling thrust as well
+            // would start the game at full thrust (Start) or cancel itself out
+            // (the Full Thrust button toggles it back on key-up).
+            if (!(event?.target instanceof HTMLButtonElement)) {
+              model.toggleFullThrust();
             }
             break;
           default:

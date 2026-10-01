@@ -32,7 +32,7 @@
     "hardLandingsColon": "hard landings:"
   },
   "messages": {
-    "landingSpeedEq": "Landing speed = ",
+    "landingSpeedPattern": "Landing speed = {{speed}} m/s",
     "softLanding": "Soft Landing.",
     "hardLanding": "Hard Landing.",
     "crash1": "Crash landing, legs damaged.",
@@ -53,11 +53,7 @@
     "tilt": "Tilt left / right",
     "tiltDescription": "Tilt the lander left or right.",
     "fullThrust": "Toggle full thrust",
-    "fullThrustDescription": "Toggle the engine between full thrust and off.",
-    "reset": "Reset / new game",
-    "resetDescription": "Reset the game.",
-    "pausePlay": "Pause or play",
-    "pausePlayDescription": "Pause or resume the flight."
+    "fullThrustDescription": "Toggle the engine between full thrust and off."
   },
   "a11y": {
     "screenSummary": {

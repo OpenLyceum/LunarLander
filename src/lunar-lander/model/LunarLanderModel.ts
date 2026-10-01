@@ -80,6 +80,10 @@ export class LunarLanderModel implements TModel {
   public constructor(preferences: LunarLanderPreferencesModel) {
     this.preferences = preferences;
     this.showVectorsProperty.value = preferences.showVectorsProperty.value;
+    // Changing the preference mid-game applies immediately, not only after Reset All.
+    preferences.showVectorsProperty.lazyLink((showVectors) => {
+      this.showVectorsProperty.value = showVectors;
+    });
     this.terrain = new Terrain();
 
     const startX = this.terrain.startX;
@@ -101,9 +105,12 @@ export class LunarLanderModel implements TModel {
 
   // ── Controls ──────────────────────────────────────────────────────────────
 
-  /** Set thrust, clamped to [0, MAX_THRUST]. No-op when out of fuel (matches the original). */
+  /**
+   * Set thrust, clamped to [0, MAX_THRUST]. No-op when out of fuel (matches the
+   * original) or before the player has pressed Start.
+   */
   private setThrust(newThrust: number): void {
-    if (this.lander.remainingFuelProperty.value <= 0) {
+    if (!this.hasStartedProperty.value || this.lander.remainingFuelProperty.value <= 0) {
       return;
     }
     this.lander.thrustProperty.value = Math.max(0, Math.min(MAX_THRUST, newThrust));
@@ -131,7 +138,7 @@ export class LunarLanderModel implements TModel {
   }
 
   private tilt(direction: number): void {
-    if (this.crashStateProperty.value === CrashState.CRASH_LANDED) {
+    if (!this.hasStartedProperty.value || this.crashStateProperty.value === CrashState.CRASH_LANDED) {
       return;
     }
     // The RCS puff/sound fire whenever the thrusters are used (even on a pad).
@@ -184,20 +191,27 @@ export class LunarLanderModel implements TModel {
     let aX = (eff * Math.sin(angle)) / m;
     let aY = (eff * Math.cos(angle)) / m - GRAVITY;
 
-    // Position-Verlet style update (identical to the Flash original).
+    // Exact constant-acceleration update over the slice (identical to the Flash original).
     x += h * vX + 0.5 * h * h * aX;
     y += h * vY + 0.5 * h * h * aY;
     vX += aX * h;
     vY += aY * h;
 
-    // Burn fuel via the rocket equation; cut thrust when the tank is empty.
+    // Burn fuel at the mass flow rate F / ISP; cut thrust when the tank is empty.
     const fuel = Math.max(0, fuelBefore - (eff * h) / ISP);
     lander.remainingFuelProperty.value = fuel;
     if (fuel <= 0) {
       lander.thrustProperty.value = 0;
     }
 
-    x = Math.max(this.terrain.minX, Math.min(this.terrain.maxX, x));
+    // The terrain edges are walls: stop horizontal motion there, otherwise the
+    // stale v_x would show in the readout and inflate the landing speed.
+    const clampedX = Math.max(this.terrain.minX, Math.min(this.terrain.maxX, x));
+    if (clampedX !== x) {
+      x = clampedX;
+      vX = 0;
+      aX = 0;
+    }
     const surf = this.terrain.surfaceY(x);
 
     if (this.crashStateProperty.value === CrashState.IN_FLIGHT) {

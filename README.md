@@ -9,9 +9,9 @@ lunar module to a soft landing by managing thrust and tilt while fuel runs down 
 
 - Thrust and tilt controls via keyboard and on-screen buttons
 - Soft, hard, and crash landings with per-zone scoring on narrow flat pads
-- Physics model matching the original (lunar gravity, Tsiolkovsky fuel burn, fixed timestep)
-- Synthesized tambo sound effects and hand-designed terrain with boulders
-- English and French UI, projector color profile, and PWA support
+- Physics model matching the original (lunar gravity, mass-flow fuel burn, fixed timestep)
+- Synthesized tambo sound effects and a fixed (seeded, identical every game) terrain with boulders
+- English, French, and Spanish UI, projector color profile, and PWA support
 
 ### How to Play
 
@@ -20,8 +20,8 @@ lunar module to a soft landing by managing thrust and tilt while fuel runs down 
 | More / less thrust | ↑ / ↓ | thrust ▲ / ▼ |
 | Tilt left / right | ← / → | ◄ / ► |
 | Toggle full thrust | Space | "Full Thrust" |
-| Pause / help | P | "Help/Pause" |
-| Reset | R | Reset All |
+| Pause / play | Alt+K | Play/Pause |
+| Reset | Alt+R | Reset All |
 
 Land gently (under 2 m/s and roughly level) for a **soft landing** plus a bonus;
 under 6 m/s is a **hard landing**; faster than that is a crash. Each flat zone
@@ -31,8 +31,8 @@ scores once — narrower zones are worth more. Don't touch the boulders.
 
 The model reproduces the original equations and constants exactly:
 lunar gravity `g = 1.6 m/s²`, empty mass `6839 kg`, descent fuel `816.5 kg`,
-max thrust `45000 N`, specific impulse `3050 m/s` (Tsiolkovsky rocket equation for
-fuel burn). It integrates on a fixed `40 ms` timestep with real-frame accumulation,
+max thrust `45000 N`, effective exhaust velocity `3050 m/s` (fuel burns at
+ṁ = F / vₑ). It integrates on a fixed `40 ms` timestep with real-frame accumulation,
 so trajectories match the tuned original regardless of frame rate.
 
 ## Quick Start
@@ -88,7 +88,7 @@ src/
     model/
       LunarLanderConstants.ts                     # physics + layout constants
       CrashState.ts  Lander.ts                    # flight state + kinematics
-      Terrain.ts  TerrainData.ts                  # hand-designed terrain + queries
+      Terrain.ts  TerrainData.ts                  # seeded terrain generator + queries
       ScoreKeeper.ts                              # per-zone scoring
       LunarLanderModel.ts                         # step / landing / collision / scoring
     view/
