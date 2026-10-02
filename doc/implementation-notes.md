@@ -77,8 +77,13 @@ screen summaries.
 
 ## Disposal conventions
 
-Single-screen, session-lifetime nodes. `LunarLanderSoundView` generators register with sound
-manager for sim lifetime. No dynamic entity add/remove.
+Single-screen, session-lifetime nodes. The screen view and every node in it
+(`LunarLanderScreenView`, `LunarLanderSoundView`, `FuelGaugeNode`, `VectorsNode`, `LanderNode`,
+`StartOverlayNode`, `ScoreReadoutNode`) are built once and live as long as the sim, so their
+`link`s, `multilink`s and `addListener`s are never removed and those classes have no `dispose()`.
+`LunarLanderSoundView` generators register with the sound manager for the sim's lifetime. There is
+no dynamic entity add/remove. `tests/memory-leak.test.ts` therefore covers the models
+(`LunarLanderModel`, `TimeModel`) only.
 
 ## Testing
 
