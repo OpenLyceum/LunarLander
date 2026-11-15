@@ -47,6 +47,3 @@ export const fullThrustHotkeyData = new HotkeyData({
   keyboardHelpDialogLabelStringProperty: keyboardHelpStrings.fullThrustStringProperty,
   keyboardHelpDialogPDOMLabelStringProperty: keyboardHelpStrings.fullThrustDescriptionStringProperty,
 });
-
-/** Every global flight hotkey handled by the screen view, in dialog order. */
-export const lunarLanderHotkeyData = [thrustHotkeyData, tiltHotkeyData, fullThrustHotkeyData];

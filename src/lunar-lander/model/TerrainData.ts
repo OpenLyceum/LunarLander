@@ -13,8 +13,8 @@
  */
 import LunarLanderConstants from "../../LunarLanderConstants.js";
 
-export type FlatSegment = { kind: "flat"; x0: number; x1: number; height: number; zoneIndex: number };
-export type SlopeSegment = { kind: "slope"; x0: number; x1: number; height0: number; height1: number };
+type FlatSegment = { kind: "flat"; x0: number; x1: number; height: number; zoneIndex: number };
+type SlopeSegment = { kind: "slope"; x0: number; x1: number; height0: number; height1: number };
 export type TerrainSegment = FlatSegment | SlopeSegment;
 export type Boulder = { x: number; surface: number; radius: number };
 

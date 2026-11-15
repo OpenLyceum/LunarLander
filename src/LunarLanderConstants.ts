@@ -92,6 +92,3 @@ const LunarLanderConstants = {
 LunarLanderNamespace.register("LunarLanderConstants", LunarLanderConstants);
 
 export default LunarLanderConstants;
-
-/** Corner radius shared by themed panels (px). */
-export const PANEL_CORNER_RADIUS = 5;
