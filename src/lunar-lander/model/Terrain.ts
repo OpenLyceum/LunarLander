@@ -15,11 +15,11 @@ export class Terrain {
     this.data = data;
   }
 
-  public get segments(): ReadonlyArray<TerrainSegment> {
+  public get segments(): readonly TerrainSegment[] {
     return this.data.segments;
   }
 
-  public get boulders(): ReadonlyArray<Boulder> {
+  public get boulders(): readonly Boulder[] {
     return this.data.boulders;
   }
 

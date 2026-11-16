@@ -19,8 +19,8 @@ export type TerrainSegment = FlatSegment | SlopeSegment;
 export type Boulder = { x: number; surface: number; radius: number };
 
 export type TerrainData = {
-  readonly segments: ReadonlyArray<TerrainSegment>;
-  readonly boulders: ReadonlyArray<Boulder>;
+  readonly segments: readonly TerrainSegment[];
+  readonly boulders: readonly Boulder[];
   readonly minX: number;
   readonly maxX: number;
   readonly startX: number;
@@ -92,7 +92,7 @@ function appendHills(segments: TerrainSegment[], x0: number, x1: number, hStart:
 }
 
 /** Surface elevation at x over already-built segments (mirrors Terrain.surfaceY). */
-function surfaceYAt(segments: ReadonlyArray<TerrainSegment>, x: number): number {
+function surfaceYAt(segments: readonly TerrainSegment[], x: number): number {
   for (const s of segments) {
     if (x >= s.x0 && x <= s.x1) {
       if (s.kind === "flat") {
