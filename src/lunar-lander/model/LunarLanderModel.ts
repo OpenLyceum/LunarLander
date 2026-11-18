@@ -56,7 +56,7 @@ export class LunarLanderModel implements TModel {
   public readonly hitBoulderProperty = new BooleanProperty(false);
 
   // Paused until the player presses Start; then gated by the Play/Pause control.
-  public readonly timer = new TimeModel(false);
+  public readonly timer = new TimeModel();
   public readonly hasStartedProperty = new BooleanProperty(false);
 
   public readonly showVectorsProperty = new BooleanProperty(lunarLanderQueryParameters.showVectors);
