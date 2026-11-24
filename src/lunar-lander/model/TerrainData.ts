@@ -11,6 +11,8 @@
  * game uses the same terrain. Pads are laid left-to-right; the total width defines
  * the model's horizontal extent (see Terrain.maxX).
  */
+
+import { roundSymmetric } from "scenerystack/dot";
 import LunarLanderConstants from "../../LunarLanderConstants.js";
 
 type FlatSegment = { kind: "flat"; x0: number; x1: number; height: number; zoneIndex: number };
@@ -75,7 +77,7 @@ function padHeight(i: number): number {
  */
 function appendHills(segments: TerrainSegment[], x0: number, x1: number, hStart: number, hEnd: number): void {
   const span = x1 - x0;
-  const steps = Math.max(2, Math.round(span / HILL_STEP));
+  const steps = Math.max(2, roundSymmetric(span / HILL_STEP));
   let prevX = x0;
   let prevH = hStart;
   for (let i = 1; i <= steps; i++) {
@@ -133,7 +135,7 @@ function build(): TerrainData {
     x += width;
 
     if (i < PAD_COUNT - 1) {
-      const gap = MIN_GAP + Math.round(rand() * GAP_SPREAD);
+      const gap = MIN_GAP + roundSymmetric(rand() * GAP_SPREAD);
       gapCenters.push(x + gap / 2);
       appendHills(segments, x, x + gap, height, padHeight(i + 1));
       x += gap;
@@ -149,9 +151,9 @@ function build(): TerrainData {
   // start area clear. Even sampling spreads them across the whole surface.
   const eligible = gapCenters.filter((_, gi) => gi !== START_PAD - 1 && gi !== START_PAD);
   for (let k = 0; k < BOULDER_COUNT; k++) {
-    const idx = eligible.length <= 1 ? 0 : Math.round((k * (eligible.length - 1)) / (BOULDER_COUNT - 1));
+    const idx = eligible.length <= 1 ? 0 : roundSymmetric((k * (eligible.length - 1)) / (BOULDER_COUNT - 1));
     const bx = eligible[idx] ?? eligible[0] ?? startX;
-    const radius = 5 + Math.round(rand() * 3); // 5..8 m
+    const radius = 5 + roundSymmetric(rand() * 3); // 5..8 m
     boulders.push({ x: bx, surface: surfaceYAt(segments, bx), radius });
   }
 

@@ -11,7 +11,7 @@
  *   - a sprinkle of craters/speckle gives it a dusty lunar texture,
  *   - boulders are irregular rocks lit from the upper-left.
  */
-import { Vector2 } from "scenerystack/dot";
+import { roundSymmetric, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Circle, Line, LinearGradient, Node, Path, RadialGradient } from "scenerystack/scenery";
@@ -157,7 +157,7 @@ export class TerrainNode extends Node {
       modelViewTransform.modelToViewY(terrain.surfaceY(modelViewTransform.viewToModelX(x)));
 
     // ── 1. Broad mare patches: overlapping low-opacity dark blobs for soft shading ──
-    const mareCount = Math.max(3, Math.round(viewWidth / 220));
+    const mareCount = Math.max(3, roundSymmetric(viewWidth / 220));
     for (let i = 0; i < mareCount; i++) {
       const x = minX + rand() * viewWidth;
       const r = 50 + rand() * 90;
@@ -170,7 +170,7 @@ export class TerrainNode extends Node {
     }
 
     // ── 2. Craters ──────────────────────────────────────────────────────────────
-    const craterCount = Math.max(14, Math.round(viewWidth / 44));
+    const craterCount = Math.max(14, roundSymmetric(viewWidth / 44));
     for (let i = 0; i < craterCount; i++) {
       const x = minX + rand() * viewWidth;
       const radius = 3 + rand() * 7;
@@ -203,7 +203,7 @@ export class TerrainNode extends Node {
     }
 
     // ── 3. Pebbles: a dark rock with a tiny lit cap on the sunward shoulder ────────
-    const pebbleCount = Math.max(20, Math.round(viewWidth / 34));
+    const pebbleCount = Math.max(20, roundSymmetric(viewWidth / 34));
     for (let i = 0; i < pebbleCount; i++) {
       const x = minX + rand() * viewWidth;
       const radius = 1.2 + rand() * 2.6;
@@ -220,7 +220,7 @@ export class TerrainNode extends Node {
     }
 
     // ── 4. Fine grain: a dense sprinkle of faint dust specks ───────────────────────
-    const grainCount = Math.max(80, Math.round(viewWidth / 8));
+    const grainCount = Math.max(80, roundSymmetric(viewWidth / 8));
     for (let i = 0; i < grainCount; i++) {
       const x = minX + rand() * viewWidth;
       const radius = 0.5 + rand() * 1.4;
@@ -242,7 +242,7 @@ export class TerrainNode extends Node {
   /** An irregular rock lit from the upper-left, seated at (cx, cy) with rough radius r. */
   private static buildBoulder(cx: number, cy: number, r: number, seedX: number): Node {
     const node = new Node({ x: cx, y: cy, pickable: false });
-    const rand = mulberry32(0x9e37 + Math.round(seedX * 131));
+    const rand = mulberry32(0x9e37 + roundSymmetric(seedX * 131));
 
     // Build a lumpy closed outline (local coords around the origin).
     const lobes = 9;
