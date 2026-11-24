@@ -11,7 +11,7 @@
  */
 
 import { DerivedProperty } from "scenerystack/axon";
-import { toFixed } from "scenerystack/dot";
+import { roundSymmetric, toFixed } from "scenerystack/dot";
 import { StringUtils } from "scenerystack/phetcommon";
 import { ScreenSummaryContent } from "scenerystack/sim";
 import { StringManager } from "../../i18n/StringManager.js";
@@ -46,12 +46,12 @@ export class LunarLanderScreenSummaryContent extends ScreenSummaryContent {
           return beforeStart;
         }
         const values = {
-          altitude: Math.round(altitude),
-          range: Math.round(range),
+          altitude: roundSymmetric(altitude),
+          range: roundSymmetric(range),
           vx: toFixed(vx, 1),
           vy: toFixed(vy, 1),
-          thrust: Math.round(thrust),
-          fuel: Math.round(fuel),
+          thrust: roundSymmetric(thrust),
+          fuel: roundSymmetric(fuel),
           score: score,
         };
         return StringUtils.fillIn(crashState === CrashState.IN_FLIGHT ? inFlight : landed, values);
